@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "chart.js": "^4.4.4",
     "dayjs": "^1.11.12",
     "firebase": "^10.12.2",
     "pinia": "^2.1.7",

@@ -6,6 +6,36 @@
   >
   <div v-else>
     <h1>Список собеседований</h1>
+    <div class="flex align-items-center mb-5">
+      <div class="flex align-items-center mr-2">
+        <app-radio
+          inputId="interviewResult1"
+          name="result"
+          value="Refusal"
+          v-model="selectedFilterResult"
+        />
+        <label for="interviewResult1" class="ml-2">Отказ</label>
+      </div>
+      <div class="flex align-items-center mr-2">
+        <app-radio
+          inputId="interviewResult2"
+          name="result"
+          value="Offer"
+          v-model="selectedFilterResult"
+        />
+        <label for="interviewResult2" class="ml-2">Оффер</label>
+      </div>
+      <app-button class="mr-2" @click="submitFilter" :disabled="!selectedFilterResult"
+        >Применить</app-button
+      >
+      <app-button
+        class="mr-2"
+        severity="danger"
+        @click="clearFilter"
+        :disabled="!selectedFilterResult"
+        >Сбросить</app-button
+      >
+    </div>
     <app-datatable :value="interviews">
       <app-column field="company" header="Компания"></app-column>
       <app-column field="hrName" header="Имя HR"></app-column>
@@ -102,7 +132,8 @@ import {
   orderBy,
   getDocs,
   deleteDoc,
-  doc
+  doc,
+  where
 } from 'firebase/firestore'
 import { useUserStore } from '@/stores/user'
 import { IInterview } from '@/interfaces'
@@ -114,12 +145,37 @@ const confirm = useConfirm()
 
 const interviews = ref<IInterview[]>([])
 const isLoading = ref<boolean>(true)
+const selectedFilterResult = ref<string>('')
 
-const getAllInterviews = async <T extends IInterview>(): Promise<T[]> => {
-  const getData = query(
-    collection(db, `users/${userStore.userId}/interviews`),
-    orderBy('createdAt', 'desc')
-  )
+const submitFilter = async (): Promise<void> => {
+  isLoading.value = true
+  const listInteviews: Array<IInterview> = await getAllInterviews(true)
+  interviews.value = listInteviews
+  isLoading.value = false
+}
+
+const clearFilter = async (): Promise<void> => {
+  isLoading.value = true
+  const listInteviews: Array<IInterview> = await getAllInterviews()
+  interviews.value = listInteviews
+  isLoading.value = false
+}
+
+const getAllInterviews = async <T extends IInterview>(isFilter?: boolean): Promise<T[]> => {
+  let getData
+
+  if (isFilter) {
+    getData = query(
+      collection(db, `users/${userStore.userId}/interviews`),
+      orderBy('createdAt', 'desc'),
+      where('result', '==', selectedFilterResult.value)
+    )
+  } else {
+    getData = query(
+      collection(db, `users/${userStore.userId}/interviews`),
+      orderBy('createdAt', 'desc')
+    )
+  }
 
   const listDocs = await getDocs(getData)
 
