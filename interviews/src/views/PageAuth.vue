@@ -12,10 +12,10 @@
 
       <form @submit.prevent="submitForm">
         <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-        <app-inputtext v-model="email" id="email1" type="email" class="w-full mb-3" />
+        <app-input-text v-model="email" id="email1" type="email" class="w-full mb-3" />
 
         <label for="password1" class="block text-900 font-medium mb-2">Пароль</label>
-        <app-inputtext v-model="password" id="password1" type="password" class="w-full mb-3" />
+        <app-input-text v-model="password" id="password1" type="password" class="w-full mb-3" />
 
         <app-button
           :label="submitButtonText"
