@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import { getFirestore, collection, query, orderBy, getDocs } from 'firebase/firestore'
 import { useUserStore } from '@/stores/user'
-import { IInterview } from '@/interfaces'
+import type { IInterview } from '@/interfaces'
 
 const userStore = useUserStore()
 const db = getFirestore()

@@ -136,7 +136,7 @@ import {
   where
 } from 'firebase/firestore'
 import { useUserStore } from '@/stores/user'
-import { IInterview } from '@/interfaces'
+import type { IInterview } from '@/interfaces'
 import { useConfirm } from 'primevue/useconfirm'
 
 const userStore = useUserStore()
